@@ -168,7 +168,7 @@ def generate_tiles(name, datapath, bounds):
     height = img.height
 
     print('Creating tiles...')
-    output_dir = 'data/tiles/{}'.format(name)
+    output_dir = 'data/vec/{}'.format(name)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
