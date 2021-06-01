@@ -1,3 +1,10 @@
+# Setup
+
+```
+git submodule init
+git submodule update
+```
+
 # Usage
 
 1. First set the `PENG_BRUSH_MAPBOX_TOKEN` env var to [your Mapbox key](https://account.mapbox.com/access-tokens/). It needs to have the `styles:tiles` scope (which should be included by default).
