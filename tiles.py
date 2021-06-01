@@ -30,7 +30,7 @@ class TileSet:
         return self._tiles[y][x]
 
     def tiles(self):
-        n_tiles_y, _ = self.tile_dims()
+        _, n_tiles_y = self.dims()
         for y in range(n_tiles_y):
             for x in sorted(self._tiles[y].keys()):
-                yield (x, y), self._tiles[y][x]
+                yield (x, n_tiles_y - y - 1), self._tiles[y][x]
