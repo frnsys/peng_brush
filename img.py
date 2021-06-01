@@ -1,6 +1,7 @@
 import os
 import math
 from PIL import Image
+from tqdm import tqdm
 from tiles import TileSet
 
 
@@ -37,7 +38,7 @@ def combine_images(im_paths_a, im_paths_b, outdir):
     dims_b = (int(tile_dims_b[0] * scale_b), int(tile_dims_b[1] * scale_b))
 
     im_dims = (dims_a[0] * 2, dims_b[1])
-    for (x, y), tile_path in ts_a.tiles():
+    for (x, y), tile_path in tqdm(ts_a.tiles()):
         im_a = Image.open(tile_path)
         im_b = Image.open(ts_b[x, y])
         if scale_a != 1.:
@@ -63,7 +64,7 @@ def stitch(im_paths, outpath):
     im_dims = (n_tiles_x * tile_w, n_tiles_y * tile_h)
     im = Image.new('RGB', im_dims)
     for (j, i), tile_path in ts.tiles():
-        y = i * tile_h
+        y = im_dims[1] - ((i + 1) * tile_h)
         x = j * tile_w
         tile_im = Image.open(tile_path)
         im.paste(tile_im, (x, y))
