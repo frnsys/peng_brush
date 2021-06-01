@@ -6,7 +6,8 @@ from glob import glob
 from img import combine_images
 from peng.util import download
 
-TILE_SIZE_M = 500 # in meters
+# Keep to 256x256px for pix2pix
+TILE_SIZE_M = 256 # in meters
 METERS_PER_PX = 1
 
 # Set this env var first
@@ -58,31 +59,27 @@ if __name__ == '__main__':
     width = height = int(TILE_SIZE_M/METERS_PER_PX)
 
     outdir = 'data/{}'.format(name)
-    if os.path.exists(outdir):
-        print('Output directory already exists. Skipping tile download.')
-        print('Remove output directory to re-download.')
-    else:
-        print('Downloading tiles...')
-        os.makedirs(outdir)
-        os.makedirs(os.path.join(outdir, 'sat'))
-        os.makedirs(os.path.join(outdir, 'vec'))
-        os.makedirs(os.path.join(outdir, 'train'))
+    print('Downloading tiles...')
+    os.makedirs(outdir)
+    os.makedirs(os.path.join(outdir, 'sat'))
+    os.makedirs(os.path.join(outdir, 'vec'))
+    os.makedirs(os.path.join(outdir, 'train'))
 
-        def fn(inp):
-            (x, y), bbox = inp
-            for typ in ['sat', 'vec']:
-                outpath = 'data/{}/{}/{}_{}.jpg'.format(name, typ, x, y)
+    def fn(inp):
+        (x, y), bbox = inp
+        for typ in ['sat', 'vec']:
+            outpath = os.path.join(outdir, '{}/{}_{}.jpg'.format(name, typ, x, y))
+            if not os.path.exists(outpath):
                 get_image(bbox, typ, (width, height), outpath)
 
-        n_x, n_y = util.tile_dims(bbox, TILE_SIZE_M)
-        n_tiles = n_x * n_y
-        tile_iter = tqdm(util.tileize(bbox, TILE_SIZE_M), total=n_tiles)
-        with Pool(4) as p:
-            list(p.imap(fn, tile_iter))
+    n_x, n_y = util.tile_dims(bbox, TILE_SIZE_M)
+    n_tiles = n_x * n_y
+    tile_iter = tqdm(util.tileize(bbox, TILE_SIZE_M), total=n_tiles)
+    with Pool(4) as p:
+        list(p.imap(fn, tile_iter))
 
     print('Combining tiles...')
     combine_images(
             glob('data/{}/vec/*.jpg'.format(name)),
             glob('data/{}/sat/*.jpg'.format(name)),
             'data/{}/train'.format(name))
-    print('examples:', len(glob('data/{}/train'.format(name))))
