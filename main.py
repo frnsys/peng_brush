@@ -85,3 +85,4 @@ if __name__ == '__main__':
             glob('data/{}/vec/*.jpg'.format(name)),
             glob('data/{}/sat/*.jpg'.format(name)),
             'data/{}/train'.format(name))
+    print('examples:', len(glob('data/{}/train'.format(name))))
