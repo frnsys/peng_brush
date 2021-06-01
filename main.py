@@ -64,9 +64,9 @@ if __name__ == '__main__':
     else:
         print('Downloading tiles...')
         os.makedirs(outdir)
-        os.makedirs(os.path.join(outdir), 'sat')
-        os.makedirs(os.path.join(outdir), 'vec')
-        os.makedirs(os.path.join(outdir), 'train')
+        os.makedirs(os.path.join(outdir, 'sat'))
+        os.makedirs(os.path.join(outdir, 'vec'))
+        os.makedirs(os.path.join(outdir, 'train'))
 
         def fn(inp):
             (x, y), bbox = inp
